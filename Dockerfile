@@ -1,5 +1,11 @@
 # Base image
 FROM node:16
+ 
+ #Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY . /app
 
 # Install gnupg and curl
 RUN apt-get update && apt-get install -y gnupg curl
@@ -18,11 +24,7 @@ RUN apt-get update
 # Install MongoDB Community Server
 RUN apt-get install -y mongodb-org
 
-# Set working directory
-WORKDIR /app
-
-# Copy project files
-COPY . /app
+#
 
 # Install project dependencies
 RUN npm install
