@@ -1,36 +1,32 @@
 # Base image
-FROM node:16
- 
- #Set working directory
+FROM node:16 AS build
+
+# Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY . /app
-
-# Install gnupg and curl
-RUN apt-get update && apt-get install -y gnupg curl
-
-# Import the MongoDB public GPG key
-RUN curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-    gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
-
-# Create the list file for MongoDB
-RUN echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | \
-    tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-
-# Reload the package database
-RUN apt-get update
-
-# Install MongoDB Community Server
-RUN apt-get install -y mongodb-org
-
-#
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install project dependencies
 RUN npm install
 
+# Copy project files
+COPY . .
+
+# Build the application (if applicable)
+# RUN npm run build
+
+# Use a smaller base image for the final stage
+FROM node:16-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the necessary files from the build stage
+COPY --from=build /app .
+
 # Expose the application port
 EXPOSE 5000
 
-# Start MongoDB and the application
-CMD ["sh", "-c", "mongod --fork --logpath /var/log/mongodb.log && npm start"]
+# Start the application
+CMD ["npm", "start"]
