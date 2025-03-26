@@ -59,9 +59,15 @@ jobs:
       uses: actions/checkout@v4
     - name: Install AWS CLI
       run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
+        if ! command -v aws &> /dev/null; then
+          echo "AWS CLI not found. Installing..."
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+        else
+          echo "AWS CLI found. Updating..."
+          sudo ./aws/install --update
+        fi
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
