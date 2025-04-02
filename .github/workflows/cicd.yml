@@ -6,7 +6,7 @@ on:
 
 jobs: 
 
-  security-check:
+  security-check: 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
