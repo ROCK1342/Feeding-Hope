@@ -15,7 +15,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }} 
           script: |
             echo "🔹 Installing Docker on EC2..."
             # Install Docker if it's not already installed
