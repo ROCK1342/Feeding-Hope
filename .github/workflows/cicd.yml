@@ -8,7 +8,7 @@ jobs:
  
   deploy:
     runs-on: ubuntu-latest
-   # needs: [sonar_scan, security-check,build_docker_image_and_push]  # Deploy only if SonarQube & Prometheus checks pass
+   # needs: [sonar_scan, security-check,build_docker_image_and_push]  # Deploy only if SonarQube & Prometheus checks pass 
     steps:
       - name: SSH into EC2 and Deploy Docker Containers
         uses: appleboy/ssh-action@v0.1.10
